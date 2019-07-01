@@ -2,45 +2,7 @@ $(function(){
 getBooking();
 getRequest();
 
-function getBooking(){
-        $("#spinner").css("display", "block");
-        $.ajax({
-            url: "getbooking.php",
-            success: function(data2){
-                //console.log(data2); 
-                    $("#spinner").css("display", "none");
-                    $('#mybooking').html(data2);
-                $('#mybooking').hide();
-                $('#mybooking').fadeIn();
-        },
-            error: function(){
-                $("#spinner").css("display", "none");
-                $('#mybooking').html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
-                $('#mybooking').hide();
-                $('#mybooking').fadeIn();
-    }
-        }); 
-}
-    
-function getRequest(){
-        $("#spinner").css("display", "block");
-        $.ajax({
-            url: "getrequest.php",
-            success: function(data2){
-                //console.log(data2); 
-                    $("#spinner").css("display", "none");
-                    $('#myrequest').html(data2);
-                $('#myrequest').hide();
-                $('#myrequest').fadeIn();
-        },
-            error: function(){
-                $("#spinner").css("display", "none");
-                $('#myrequest').html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
-                $('#myrequest').hide();
-                $('#myrequest').fadeIn();
-    }
-        }); 
-}
+
 
 $('#requestbookingModal').on('show.bs.modal', function (e) {
         var $invoker = $(e.relatedTarget);
@@ -81,7 +43,7 @@ $('#cancelbookingModal').on('show.bs.modal', function (e) {
             event.preventDefault();
             //var $invoker = $(event.relatedTarget);
             data = $('#cancelbookingform').serializeArray();
-            data.push({name: 'book_id', value: $invoker.data('book_id')});
+            data.push({name: 'trip_id', value: $invoker.data('trip_id')});
             $.ajax({
             url: "cancelbooking.php",
             type: "POST",
@@ -111,7 +73,7 @@ $('#acceptbookingModal').on('show.bs.modal', function (e) {
             event.preventDefault();
             //var $invoker = $(event.relatedTarget);
             data = $('#acceptbookingform').serializeArray();
-            data.push({name: 'book_id', value: $invoker.data('book_id')});
+            data.push({name: 'user_id', value: $invoker.data('user_id')});
             data.push({name: 'trip_id', value: $invoker.data('trip_id')});
             $.ajax({
             url: "acceptrequest.php",
@@ -136,14 +98,15 @@ $('#acceptbookingModal').on('show.bs.modal', function (e) {
     
 $('#denybookingModal').on('show.bs.modal', function (e) {
         var $invoker = $(e.relatedTarget);
-        console.log($invoker.data('book_id'));
+        //console.log($invoker.data('book_id'));
         $("#denybookingmessage").hide();
         
     $('#denybookingform').submit(function(event){
             event.preventDefault();
             //var $invoker = $(event.relatedTarget);
             data = $('#denybookingform').serializeArray();
-            data.push({name: 'book_id', value: $invoker.data('book_id')});
+            data.push({name: 'user_id', value: $invoker.data('user_id')});
+            data.push({name: 'trip_id', value: $invoker.data('trip_id')});
             $.ajax({
             url: "denyrequest.php",
             type: "POST",
@@ -163,5 +126,45 @@ $('#denybookingModal').on('show.bs.modal', function (e) {
      });
 });
 });
+    
+function getBooking(){
+        $("#spinner").css("display", "block");
+        $.ajax({
+            url: "getbooking.php",
+            success: function(data2){
+                //console.log(data2);  
+                    $("#spinner").css("display", "none");
+                    $('#mybooking').html(data2);
+                $('#mybooking').hide();
+                $('#mybooking').fadeIn();
+        },
+            error: function(){
+                $("#spinner").css("display", "none");
+                $('#mybooking').html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+                $('#mybooking').hide();
+                $('#mybooking').fadeIn();
+    }
+        }); 
+}
+    
+function getRequest(){
+        $("#spinner").css("display", "block");
+        $.ajax({
+            url: "getrequest.php",
+            success: function(data2){
+                //console.log(data2); 
+                    $("#spinner").css("display", "none");
+                    $('#myrequest').html(data2);
+                $('#myrequest').hide();
+                $('#myrequest').fadeIn();
+        },
+            error: function(){
+                $("#spinner").css("display", "none");
+                $('#myrequest').html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+                $('#myrequest').hide();
+                $('#myrequest').fadeIn();
+    }
+        }); 
+}    
     
 });

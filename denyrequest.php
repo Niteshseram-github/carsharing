@@ -2,10 +2,12 @@
 //start session and connect
 session_start();
 include('connection.php');
-$book_id = $_POST['book_id'];
-$tbl_name='booking';
+$user_id = $_POST['user_id'];
+$trip_id = $_POST['trip_id'];
 
-$sql = "SELECT * FROM $tbl_name WHERE book_id='$book_id'";
+$tbl_name='books';
+
+$sql = "SELECT * FROM $tbl_name WHERE user_id='$user_id' AND trip_id='$trip_id'";
 $result = mysqli_query($link, $sql);
 if($result){
     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
@@ -14,7 +16,7 @@ if($result){
     }
 }
 
-$sql = "UPDATE $tbl_name SET status='Denied' WHERE book_id='$book_id'";
+$sql = "UPDATE $tbl_name SET status='Denied' WHERE user_id='$user_id' AND trip_id='$trip_id'";
 $result = mysqli_query($link, $sql);
 
 $results = mysqli_query($link, $sql);

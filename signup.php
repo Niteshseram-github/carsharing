@@ -15,11 +15,21 @@ $missingPassword2 = '<p><strong>Please confirm your password</strong></p>';
 $missingfirstname = '<p><strong>Please enter your firstname!</strong></p>';
 $missinglastname = '<p><strong>Please enter your lastname!</strong></p>';
 $missingPhone = '<p><strong>Please enter your phone number!</strong></p>';
-$invalidPhoneNumber = '<p><strong>Please enter a valid phone number (digits only and less than 15 long)!</strong></p>';
+$invalidPhoneNumber = '<p><strong>Please enter a valid phone number (digits only and should be 10 digits)!</strong></p>';
 $invalidEmail = '<p><strong>Please enter a valid email address!</strong></p>';
 $missinggender = '<p><strong>Please select your gender</strong></p>';
 $missinginformaton = '<p><strong>Please share a few more words about yourself.</strong></p>';
 //    <!--Get username, email, password, password2-->
+
+//Get phone number
+
+if(empty($_POST["phonenumber"])){
+    $errors .= $missingPhone;   
+}elseif(!preg_match('/^[6789][0-9]{9}$/', $_POST["phonenumber"])){
+    $errors .= $invalidPhoneNumber;
+}elseif(preg_match('/^[6789][0-9]{9}$/', $_POST["phonenumber"])){
+    $phonenumber .=$_POST["phonenumber"];
+}
 //Get username
 if(empty($_POST["username"])){
     $errors .= $missingUsername;
@@ -67,18 +77,7 @@ if(empty($_POST["password"])){
         }
     }
 }
-//Get phone number
 
-if(empty($_POST["phonenumber"])){
-    $errors .= $missingPhone;   
-}elseif(!(preg_match('/[0-9]{10}/',$_POST["phonenumber"])
-        )
-       ){
-    $errors .= $invalidPhoneNumber;
-}
-else if((preg_match('/[0-9]{10}/',$_POST["phonenumber"]))){
-    $mobileno=filter_var($_POST["phonenumber"],FILTER_SANITIZE_NUMBER_INT);
-}
 //Get gender
 if(empty($_POST["gender"])){
     $errors .= $missinggender;
@@ -130,6 +129,18 @@ $results = mysqli_num_rows($result);
 if($results){
     echo '<div class="alert alert-danger">That email is already registered. Do you want to log in?</div>';  exit;
 }
+
+
+$sql = "SELECT * FROM users WHERE phonenumber = '$phonenumber'";
+$result = mysqli_query($link, $sql);
+if(!$result){
+    echo '<div class="alert alert-danger">Error running the query!</div>'; exit;
+}
+$results = mysqli_num_rows($result);
+if($results){
+    echo '<div class="alert alert-danger">That mobile number is already registered. Do you want to log in?</div>';  exit;
+}
+
 //Create a unique  activation code
 $activationKey = bin2hex(openssl_random_pseudo_bytes(16));
     //byte: unit of data = 8 bits

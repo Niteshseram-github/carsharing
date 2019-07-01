@@ -55,7 +55,7 @@ if(!$result){
 //If combination does not exist
 //show an error message
 $count = mysqli_num_rows($result);
-if($count !== 1){
+if($count != 1){
     echo '<div class="alert alert-danger">Please try again.</div>';
     exit;
 }

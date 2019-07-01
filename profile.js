@@ -1,3 +1,7 @@
+$(function(){
+    
+    
+getCars();    
 // Ajax call to updateusername.php
 $("#updateusernameform").submit(function(event){ 
     //prevent default php processing
@@ -80,11 +84,65 @@ $("#updateemailform").submit(function(event){
     });
 
 });
+    
+    
+$("#updatephonenumberform").submit(function(event){ 
+    //prevent default php processing
+    event.preventDefault();
+    //collect user inputs
+    var datatopost = $(this).serializeArray();
+//    console.log(datatopost);
+    //send them to updateusername.php using AJAX
+    $.ajax({
+        url: "updatephonenumber.php",
+        type: "POST",
+        data: datatopost,
+        success: function(data){
+            if(data){
+                $("#updatephonenumbermessage").html(data);
+            }else{
+                location.reload();   
+            }
+        },
+        error: function(){
+            $("#updatephonenumbermessage").html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+            
+        }
+    
+    });
+
+});
+$("#updateaboutmeform").submit(function(event){ 
+    //prevent default php processing
+    event.preventDefault();
+    //collect user inputs
+    var datatopost = $(this).serializeArray();
+//    console.log(datatopost);
+    //send them to updateusername.php using AJAX
+    $.ajax({
+        url: "updateaboutme.php",
+        type: "POST",
+        data: datatopost,
+        success: function(data){
+            if(data){
+                $("#updateaboutmemessage").html(data);
+            }else{
+                location.reload();   
+            }
+        },
+        error: function(){
+            $("#updateaboutmemessage").html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+            
+        }
+    
+    });
+
+});
 
 
 //Ajax Call for the insert car details form 
 //Once the form is submitted
-$("#insertcardetailsform").submit(function(event){
+/*$("#insertcardetailsform").submit(function(event){
     //hide message
     $("#insertcardetailsmessage").hide();
     //show spinner
@@ -107,7 +165,17 @@ $("#insertcardetailsform").submit(function(event){
                 $("#spinner").css("display", "none");
                 //show message
                 $("#insertcardetailsmessage").slideDown();
-            }
+        
+             }
+            else{
+                    getCars();
+                    $("#result").hide();
+                    $('#addcarModal').modal('hide');
+                    $("#spinner").css("display", "none");
+                    //empty form
+                    $('#addcarform')[0].reset();
+                }
+            
         },
         error: function(){
             $("#insertcardetailsmessage").html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
@@ -124,7 +192,7 @@ $("#insertcardetailsform").submit(function(event){
 
 
 //Ajax for updatecarbrand
-$("#updatecarbrandform").submit(function(event){ 
+/*$("#updatecarbrandform").submit(function(event){ 
     //prevent default php processing
     event.preventDefault();
     //collect user inputs
@@ -238,7 +306,7 @@ $("#updateplatenoform").submit(function(event){
     
     });
 
-});
+});*/
 
 
 //Update picture
@@ -318,3 +386,157 @@ var match= ["image/jpeg","image/png","image/jpg"];
 function imageIsLoaded(event) {
     $('#previewing').attr('src', event.target.result);
 };
+
+
+//Click on Add Car Button
+        $('#addcarform').submit(function(event){
+            $("#result").hide();
+            $("#spinner").css("display", "block");
+            event.preventDefault();
+            data = $('#addcarform').serializeArray();
+            $.ajax({
+            url: "addcar.php",
+            data: data,
+            type: "POST",
+            success: function(data2){
+                console.log(data);
+                if(data2){
+                    $('#result').html(data2);
+                    $("#spinner").css("display", "none");
+                    $("#result").slideDown();
+                }else{
+                    getCars();
+                    $("#result").hide();
+                    $('#addcarModal').modal('hide');
+                    $("#spinner").css("display", "none");
+                    //empty form
+                    $('#addcarform')[0].reset();
+                }
+        },
+            error: function(){
+                $("#result").html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+                $("#spinner").css("display", "none");
+                $("#result").fadeIn();
+
+    }
+        }); 
+        });
+    
+    // Click on Edit Trip Button
+    $('#editcarModal').on('show.bs.modal', function (e) {
+        $('#result2').html("");
+        var $invoker = $(e.relatedTarget);
+        $.ajax({
+                url: "getcardetails.php",
+                method: "POST",
+                data: {car_id:$invoker.data('car_id')},
+                success: function(data2){
+                    car = JSON.parse(data2);
+                    //fill edit trip form inputs using AJAX returned JSON data
+                    formatModal();
+            },
+                error: function(){
+                    $('#result2').html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+                    $('#result2').hide();
+                    $('#result2').fadeIn();
+        
+                }
+            
+        });
+        
+        //setup delete button for AJAX Call
+        $('#deletetrip').click(function(){
+            $.ajax({
+                url: "deletetrips.php",
+                method: "POST",
+                data: {trip_id:$invoker.data('trip_id')},
+                success: function(){
+                    $('#edittripModal').modal('hide');
+                    getTrips();
+            },
+                error: function(){
+                    $('#result2').html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+                    $('#result2').hide();
+                    $('#result2').fadeIn();
+                }
+            
+        });
+        });
+        
+        // Click on Edit Trip Button
+        $('#edittripform').submit(function(event){
+            $("#result2").hide();
+            $("#spinner").css("display", "block");
+            event.preventDefault();
+            data = $('#edittripform').serializeArray();
+            data.push({name: 'trip_id', value: $invoker.data('trip_id')});
+            getEditTripDepartureCoordinates();
+        });
+        
+    });
+    
+    function formatModal(){
+        $('#brand2').val(car["brand"]);    
+        $('#model2').val(car["model"]); 
+        $('#regno2').val(car["regno"]);
+        $('#plateno2').val(car["plateno"]);
+        
+    }
+    
+    
+        function getCars(){
+        $("#spinner").css("display", "block");
+        $.ajax({
+            url: "getcardetails.php",
+            success: function(data2){
+                console.log(data2);
+                $("#spinner").css("display", "none");
+                $('#mycar').html(data2);
+                $('#mycar').hide();
+                $('#mycar').fadeIn();
+        },
+            error: function(){
+                $("#spinner").css("display", "none");
+                $('#mycar').html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+                $('#mycar').hide();
+                $('#mycar').fadeIn();
+    }
+        }); 
+    }
+    
+    
+    $('#deletecarModal').on('show.bs.modal', function (e) {
+        var $invoker = $(e.relatedTarget);
+        console.log($invoker.data('car_id'));
+        $("#deletecarmessage").hide();
+    
+    $('#deletecarform').submit(function(event){
+            event.preventDefault();
+            //var $invoker = $(event.relatedTarget);
+            data = $('#deletecarform').serializeArray();
+            data.push({name: 'car_id', value: $invoker.data('car_id')});
+            $.ajax({
+            url: "deletecar.php",
+            type: "POST",
+            data: data,
+            success: function(data2){
+            if(data2){
+                    $("#deletecarmessage").html(data2);
+                    $("#deletecarmessage").slideDown();
+                    $("#deletecarModal").modal('hide');
+                    
+                }
+                else{
+                    location.reload();
+                }
+            },
+            error: function(){
+            $("#deletecarmessage").html("<div class='alert alert-danger'>There was an error with the Ajax Call. Please try again later.</div>");
+            $("#deletecarmessage").slideDown();
+            
+        }
+     });
+});     
+});
+    
+});

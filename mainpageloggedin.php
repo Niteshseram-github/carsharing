@@ -39,7 +39,7 @@ if($count == 1){
     <link href="css/bootstrap.min.css" rel="stylesheet">
       <link href="styling.css" rel="stylesheet">
       <link href='https://fonts.googleapis.com/css?family=Arvo' rel='stylesheet' type='text/css'>
-      <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBYdjP_uiHxssoB-awKBFkK9kc3P32IEAg"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDnYbzIanFn0RpBSi1DM_kAmcpm3OcS5fM"></script>
       <style>
         #container{
             margin-top:120px;   
@@ -125,7 +125,10 @@ if($count == 1){
         }
         .departure, .destination{
             font-size:1.5em;
-        } 
+        }
+        .plate{
+              font-size: 1.2em;
+          } 
         .perseat{
             font-size:0.5em;
     /*        text-align:right;*/
@@ -147,6 +150,8 @@ if($count == 1){
           #mytrips{
             margin-bottom: 100px;   
           }
+        .modal { overflow: visible; }
+          .modal-body { overflow-y: visible; }
         
 
       </style>
@@ -251,7 +256,27 @@ if($count == 1){
                     <label for="seatsavailable" class="sr-only">Seats available:</label>
                     <input type="number" name="seatsavailable" id="seatsavailable" placeholder="Seats available" class="form-control">
                 </div>  
-              <div  class="form-group">
+                <div class="form-group">
+                    <label for="choosecar" class="sr-only">Choose Car:</label>
+                    <select class="form-control" id="car" name="car">
+                        <option>Select Car</option>
+                        <?php
+                            session_start();
+                            include('connection.php');
+                            $sql="SELECT * FROM cardetails WHERE user_id='".$_SESSION['user_id']."'";
+                            if($result = mysqli_query($link, $sql)){
+                                //print_r($result);
+                                if(mysqli_num_rows($result) > 0){
+                                    while($row = mysqli_fetch_array($result,MYSQL_ASSOC)){
+
+                                        echo "<option id ='".$row['id']."' value='".$row['id']."'>".$row['plateno']."</option>";
+                                    }
+                                }
+                            }
+                        ?>
+                    </select>
+                </div> 
+              <!--<div  class="form-group">
                     <label><input type="radio" name="regular" id="yes" value="Y">Regular</label>    
                     <label><input type="radio" name="regular" id="no" value="N">One-off</label>    
                 </div>
@@ -263,7 +288,7 @@ if($count == 1){
                     <label><input type="checkbox" value="1" id="friday" name="friday"> Friday</label>    
                     <label><input type="checkbox" value="1" id="saturday" name="saturday"> Saturday</label>    
                     <label><input type="checkbox" value="1" id="sunday" name="sunday"> Sunday</label>    
-                </div>  
+                </div> -->
                 <div class="form-group oneoff">
                     <label for="date"  class="sr-only">Date: </label>    
                     <input name="date" id="date" readonly="readonly" placeholder="Date"  class="form-control">
@@ -315,8 +340,28 @@ if($count == 1){
                 <div class="form-group">
                     <label for="seatsavailable2" class="sr-only">Seats available:</label>
                     <input type="number" name="seatsavailable2" placeholder="Seats available" class="form-control" id="seatsavailable2">
-                </div>  
-              <div  class="form-group">
+                </div> 
+                <div class="form-group">
+                    <label for="car2" class="sr-only">Choose Car:</label>
+                    <select class="form-control" id="car2" name="car2">
+                        <option style="display:none;" selected>Select Car</option>
+                        <?php
+                            session_start();
+                            include('connection.php');
+                            $sql="SELECT * FROM cardetails WHERE user_id='".$_SESSION['user_id']."'";
+                            if($result = mysqli_query($link, $sql)){
+                                //print_r($result);
+                                if(mysqli_num_rows($result) > 0){
+                                    while($row = mysqli_fetch_array($result,MYSQL_ASSOC)){
+
+                                        echo "<option id ='".$row['id']."' value='".$row['id']."'>".$row['plateno']."</option>";
+                                    }
+                                }
+                            }
+                        ?>
+                    </select>
+                </div>
+              <!--<div  class="form-group">
                     <label><input type="radio" name="regular2" id="yes2" value="Y">Regular</label>    
                     <label><input type="radio" name="regular2" id="no2" value="N">One-off</label>    
                 </div>
@@ -328,7 +373,7 @@ if($count == 1){
                     <label><input type="checkbox" value="1" id="friday2" name="friday2"> Friday</label>    
                     <label><input type="checkbox" value="1" id="saturday2" name="saturday2"> Saturday</label>    
                     <label><input type="checkbox" value="1" id="sunday2" name="sunday2"> Sunday</label>    
-                </div>  
+                </div>  -->
                 <div class="form-group oneoff2">
                     <input name="date2" id="date2" readonly="readonly" placeholder="Date"  class="form-control">
                 </div>  

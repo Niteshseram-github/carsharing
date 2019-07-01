@@ -4,10 +4,10 @@ session_start();
 include('connection.php');
 
 //retrieve all trips
-$sql="SELECT * FROM booking WHERE user_id='".$_SESSION['user_id']."'";
+$sql="SELECT * FROM books WHERE user_id='".$_SESSION['user_id']."'";
 $result = mysqli_query($link, $sql);
 if(mysqli_num_rows($result) == 0){
-    echo "<div class='alert alert-info noresults'>You have not booked any trip yet!</div>"; exit;
+    echo "<div class='alert alert-warning noresults'>You have not booked any trip yet!</div>"; exit;
 }
 echo '<div id="message">';
 if(mysqli_num_rows($result) > 0){
@@ -29,7 +29,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
             $row3 = mysqli_fetch_array($result3, MYSQLI_ASSOC);
             
             
-            $sql4="SELECT * FROM cardetails WHERE user_id='".$row2['user_id']."' LIMIT 1";
+            $sql4="SELECT * FROM cardetails WHERE id='".$row2['car_id']."' LIMIT 1";
             $result4 = mysqli_query($link, $sql4);
             $row4 = mysqli_fetch_array($result4, MYSQLI_ASSOC);
             
@@ -39,10 +39,10 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
             $pickup=$row['pickup_location'];
             
             
-            if($row2['regular']=="N"){
+            //if($row2['regular']=="N"){
                 $source = $row2['date'];
                 $tripDate = DateTime::createFromFormat('D d M, Y', $source);
-            }
+            //}
             
             //get trip departure
             $tripDeparture = $row2['departure'];
@@ -52,10 +52,10 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
             
             
             //Get trip frequency and time:
-            if($row2['regular']=="N"){
+            //if($row2['regular']=="N"){
                 $frequency = "One-off journey.";
                 $time = $row2['date']." at " .$row2['time'].".";
-            }else{
+            /*}else{
                 $frequency = "Regular.";
                 $weekdays=['monday'=>'Mon','tuesday'=>'Tue','wednesday'=>'Wed','thursday'=>'Thu','friday'=>'Fri','saturday'=>'Sat','sunday'=>'Sun'];
                 $array = [];
@@ -65,10 +65,10 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                     }
                     $time = implode("-", $array)." at " .$row2['time'].".";
                 }
-            }
+            }*/
             //print trip
            echo 
-             '<div class="row trip panel-heading" href="#info'.$row['book_id'].'" data-toggle="collapse">
+             '<div class="row trip panel-heading" href="#info'.$row['trip_id'].''.$row['user_id'].'" data-toggle="collapse">
                     <div class="col-sm-2 journey">
                         <div class="driver">'.$row3['first_name'].'
                         </div>
@@ -86,12 +86,12 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                     <div class="col-sm-2">';
                         if($row['status']=='Pending'){
                         echo'<button id="cancelbutton" class= "btn green" data-target="
-                        #cancelbookingModal" data-toggle="modal" data-book_id="'.$row['book_id'].'"><h6>Cancel</h6></button>';
+                        #cancelbookingModal" data-toggle="modal" data-trip_id="'.$row['trip_id'].'"><h6>Cancel</h6></button>';
                         }
                     echo'</div>
                 </div>
                
-                <div class="row moreinfo panel-body collapse" id="info'.$row['book_id'].'">
+                <div class="row moreinfo panel-body collapse" id="info'.$row['trip_id'].''.$row['user_id'].'">
                     <div class="col-sm-4 journey">
                         <div>
                             Gender: '.$row3['gender'].'
@@ -106,7 +106,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                     <div class="col-sm-4 align-items-center journey">
                         <div>Brand: '.$row4['carbrand'].'</div>
                         <div>Model: '. $row4['carmodel'] .'</div>
-                        <div class="time">'. $row4['plateno'] .'</div>
+                        <div>Plate Number: '. $row4['plateno'] .'</div>
                     </div>
                     
             </div>';

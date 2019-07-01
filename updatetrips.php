@@ -16,6 +16,8 @@ $missingfrequency = '<p><strong>Please select a frequency!</strong></p>';
 $missingdays = '<p><strong>Please select at least one weekday!</strong></p>';
 $missingdate = '<p><strong>Please choose a date for your trip!</strong></p>';
 $missingtime = '<p><strong>Please choose a time for your trip!</strong></p>';
+$missingcardetails= '<p><strong>Please fill the car details before adding trip!</strong></p>';
+$missingcar= '<p><strong>Please choose a car!</strong></p>';
 
 //Get inputs:
 $trip_id = $_POST["trip_id"];
@@ -23,17 +25,10 @@ $departure = $_POST["departure2"];
 $destination = $_POST["destination2"];
 $price = $_POST["price2"];
 $seatsavailable = $_POST["seatsavailable2"];
-$regular = $_POST["regular2"];
 $date = $_POST["date2"];
 $time = $_POST["time2"];
-$monday = $_POST["monday2"];
-$tuesday = $_POST["tuesday2"];
-$wednesday = $_POST["wednesday2"];
-$thursday = $_POST["thursday2"];
-$friday = $_POST["friday2"];
-$saturday = $_POST["saturday2"];
-$sunday = $_POST["sunday2"];
-
+//$car_id = $_POST["car_id"];
+$car=$_POST["car2"];
 //check coordinates
 if(!isset($_POST["departureLatitude"]) or !isset($_POST["departureLongitude"])){
     $errors .= $invaliddeparture;   
@@ -83,25 +78,27 @@ if(!$seatsavailable){
 }else{
     $seatsavailable = filter_var($seatsavailable, FILTER_SANITIZE_STRING);    
 }
-
+if($car=="Select Car"){
+    $errors .= $missingcar;
+}
 //Check regular
-if(!$regular){
-    $errors .= $missingfrequency;    
-}elseif($regular == "Y"){
-    if(!$monday && !$tuesday && !$wednesday && !$thursday && !$friday && !$saturday && !$sunday ){
-        $errors .= $missingdays; 
-    }
+//if(!$regular){
+    //$errors .= $missingfrequency;    
+//}elseif($regular == "Y"){
+    //if(!$monday && !$tuesday && !$wednesday && !$thursday && !$friday && !$saturday && !$sunday ){
+        //$errors .= $missingdays; 
+    //}
     if(!$time){
         $errors .= $missingtime;   
     }
-}elseif($regular == "N"){
+//}elseif($regular == "N"){
     if(!$date){
         $errors.= $missingdate;   
     }
     if(!$time){
         $errors .= $missingtime;   
     }
-}
+//}
 
 //if there is an error print error message
 if($errors){
@@ -112,13 +109,10 @@ if($errors){
     $tbl_name = 'carsharetrips';
     $departure = mysqli_real_escape_string($link, $departure);
     $destination = mysqli_real_escape_string($link, $destination);
-    if($regular == "Y"){
-        //query for a regular trip
-        $sql = "UPDATE $tbl_name SET `departure`= '$departure',`departureLongitude`='$departureLongitude',`departureLatitude`='$departureLatitude', `destination`='$destination',`destinationLongitude`='$destinationLongitude',`destinationLatitude`='$destinationLatitude', `price`='$price', `seatsavailable`='$seatsavailable', `regular`='$regular', `monday`='$monday', `tuesday`='$tuesday', `wednesday`='$wednesday', `thursday`='$thursday', `friday`='$friday', `saturday`='$saturday', `sunday`='$sunday', `time`='$time' WHERE `trip_id`='$trip_id' LIMIT 1";
-    }else{ 
+    
         //query for a one off trip
-        $sql = "UPDATE $tbl_name SET `departure`= '$departure',`departureLongitude`='$departureLongitude',`departureLatitude`='$departureLatitude', `destination`='$destination',`destinationLongitude`='$destinationLongitude',`destinationLatitude`='$destinationLatitude', `price`='$price', `seatsavailable`='$seatsavailable', `regular`='$regular', `date`='$date', `time`='$time'  WHERE `trip_id`='$trip_id'";    
-    }
+        $sql = "UPDATE $tbl_name SET `car_id`='$car', `departure`= '$departure',`departureLongitude`='$departureLongitude',`departureLatitude`='$departureLatitude', `destination`='$destination',`destinationLongitude`='$destinationLongitude',`destinationLatitude`='$destinationLatitude', `price`='$price', `seatsavailable`='$seatsavailable', `date`='$date', `time`='$time'  WHERE `trip_id`='$trip_id'";    
+    
     $results = mysqli_query($link, $sql);
     //check if query is successful
     if(!$results){

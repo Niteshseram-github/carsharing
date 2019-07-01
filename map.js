@@ -12,14 +12,16 @@ var mapOptions = {
 //create autocomplete objects
 var input1 = document.getElementById("departure");
 var input2 = document.getElementById("destination");
-//var input4 = document.getElementById("destination2");
+var input3 = document.getElementById("departure2");
+var input4 = document.getElementById("destination2");
+
 var options = {
     types: ['(regions)']   
 }
 var autocomplete1 = new google.maps.places.Autocomplete(input1, options);
 var autocomplete2 = new google.maps.places.Autocomplete(input2, options);
-//var autocomplete3 = new google.maps.places.Autocomplete(input3, options);
-//var autocomplete4 = new google.maps.places.Autocomplete(input4, options);
+var autocomplete3 = new google.maps.places.Autocomplete(input3, options);
+var autocomplete4 = new google.maps.places.Autocomplete(input4, options);
 
 //create a DirectionsService object to use the route method and get a result for our request
 var directionsService = new google.maps.DirectionsService();

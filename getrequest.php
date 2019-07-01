@@ -5,17 +5,15 @@ include('connection.php');
 
 $sql="SELECT * FROM carsharetrips WHERE user_id='".$_SESSION['user_id']."'";
 $result = mysqli_query($link, $sql);
-if(mysqli_num_rows($result) == 0){
+if(mysqli_num_rows($result) == 0 ){
+    echo '<div class="alert alert-warning">You have no request for any trips yet!</div>';
     exit;
 }
 if(mysqli_num_rows($result)>0){
 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 
-$sql1="SELECT * FROM booking WHERE trip_id='".$row['trip_id']."'";
+$sql1="SELECT * FROM books WHERE trip_id='".$row['trip_id']."'";
 $result1 = mysqli_query($link, $sql1);
-if(mysqli_num_rows($result1) == 0){
-    echo "<div class='alert alert-info noresults'>There is no request for any trips yet!</div>"; exit;
-    }
 if(mysqli_num_rows($result1) > 0 ){
 while($row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC)){
         //get trip user id
@@ -28,15 +26,19 @@ while($row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC)){
             //get user details         
             $row2 = mysqli_fetch_array($result2, MYSQLI_ASSOC);
             
+            $sql4="SELECT * FROM cardetails WHERE id='".$row['car_id']."' LIMIT 1";
+            $result4 = mysqli_query($link, $sql4);
+            $row4 = mysqli_fetch_array($result4, MYSQLI_ASSOC);
+            
             $picture = $row2['profilepicture'];
             //get firstname
             $firstname = $row2['first_name'];
             
             
-            if($row['regular']=="N"){
+            //if($row['regular']=="N"){
                 $source = $row['date'];
                 $tripDate = DateTime::createFromFormat('D d M, Y', $source);
-            }
+            //}
             
             //get trip departure
             //$tripDeparture = $row['departure'];
@@ -47,10 +49,10 @@ while($row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC)){
             
             
             //Get trip frequency and time:
-            if($row['regular']=="N"){
+           // if($row['regular']=="N"){
                 $frequency = "One-off journey.";
                 $time = $row['date']." at " .$row['time'].".";
-            }else{
+            /*}else{
                 $frequency = "Regular.";
                 $weekdays=['monday'=>'Mon','tuesday'=>'Tue','wednesday'=>'Wed','thursday'=>'Thu','friday'=>'Fri','saturday'=>'Sat','sunday'=>'Sun'];
                 $array = [];
@@ -60,10 +62,10 @@ while($row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC)){
                     }
                     $time = implode("-", $array)." at " .$row['time'].".";
                 }
-            }
+            }*/
             //print trip
            echo 
-             '<div class="row trip panel-heading" href="#info'.$row['book_id'].'" data-toggle="collapse">
+             '<div class="row trip panel-heading" href="#info'.$row['trip_id'].''.$row1['user_id'].'" data-toggle="collapse">
                     <div class="col-sm-2 journey">
                         <div class="driver">'.$row2['first_name'].'
                         </div>
@@ -75,6 +77,7 @@ while($row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC)){
                     <div class="col-sm-8 journey">
                         <div><span class="departure">Departure:</span> '.$row['departure'].'.</div>
                         <div><span class="destination">Destination:</span> '. $row['destination'] .'.</div>
+                        <div><span class="plate">Plate Number:</span> '. $row4['plateno'] .'</div>
                         <div class="time">'.$time.'</div>
                         <div><span class="status">Price: Rs '.$row['price'].'';
                     if($pickup==NULL){
@@ -94,11 +97,11 @@ while($row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC)){
                     echo'
                         <div>
                             <button id="acceptbutton" class= "btn green" data-target="
-                            #acceptbookingModal" data-toggle="modal" data-book_id="'.$row1['book_id'].'" data-trip_id="'.$row['trip_id'].'""><h6>Accept</h6></button>
+                            #acceptbookingModal" data-toggle="modal" data-user_id="'.$row1['user_id'].'" data-trip_id="'.$row['trip_id'].'""><h6>Accept</h6></button>
                         </div>
                         <div>
                             <button id="denybutton" class= "btn green" data-target="
-                            #denybookingModal" data-toggle="modal" data-book_id="'.$row1['book_id'].'"><h6>Deny</h6></button>
+                            #denybookingModal" data-toggle="modal" data-trip_id="'.$row1['trip_id'].'" data-user_id="'.$row1['user_id'].'"><h6>Deny</h6></button>
                         </div>';
                     }
                     else if($row1['status']=='Accepted'){
@@ -108,8 +111,8 @@ while($row1 = mysqli_fetch_array($result1, MYSQLI_ASSOC)){
                     
                 </div>
                
-                <div class="row moreinfo panel-body collapse" id="info'.$row['book_id'].'">
-                    <div class="col-sm-2 journey">
+                <div class="row moreinfo panel-body collapse" id="info'.$row['trip_id'].''.$row1['user_id'].'">
+                    <div class="col-sm-4 journey">
                         <div>
                             Gender: '.$row2['gender'].'
                         </div>

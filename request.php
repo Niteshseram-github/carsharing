@@ -145,7 +145,10 @@ if($count == 1){
         } 
         .status{
             font-size:1.3em;
-        } 
+        }
+          .plate{
+              font-size: 1.2em;
+          }  
         
         .time{
             margin-top:10px;  
@@ -261,7 +264,7 @@ if($count == 1){
                   
               </div>
               <div class="modal-footer">
-                  <input class="btn green" name="cancel" type="submit" value="Yes">
+                  <input class="btn green" name="yes" type="submit" value="Yes">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                   No
                 </button>
@@ -281,7 +284,7 @@ if($count == 1){
                     &times;
                   </button>
                   <h4 id="myModalLabel">
-                    Are you sure you want to accept this booking?
+                    Are you sure you want to deny this booking?
                   </h4>
               </div>
             <div class="modal-body">

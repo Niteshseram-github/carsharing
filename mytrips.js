@@ -16,10 +16,10 @@ $(function(){
         });
     
     // Add Trip form: hide All date-time-checkbox inputs
-    $('.regular').hide(); $('.oneoff').hide();
+    //$('.regular').hide(); $('.oneoff').hide();
     
     // hide/show input depending on whether the trip is a regular or one-off
-    var myradio = $('input[name="regular"]');
+    /*var myradio = $('input[name="regular"]');
     myradio.click(function(){
         if ($(this).is(':checked'))
         {
@@ -45,7 +45,7 @@ $(function(){
                 $('.regular2').hide(); $('.oneoff2').show();
             }
         }
-    }); 
+    }); */
     
     // Click on Create Trip Button
         $('#addtripform').submit(function(event){
@@ -53,6 +53,10 @@ $(function(){
             $("#spinner").css("display", "block");
             event.preventDefault();
             data = $('#addtripform').serializeArray();
+            $("#car").change(function(){
+               var car_id=$("#car").val(); 
+                data.push({name:'car_id', value: car_id});
+            });
             getAddTripDepartureCoordinates();
         });
     
@@ -218,8 +222,9 @@ $(function(){
         $('#departure2').val(trip["departure"]);    
         $('#destination2').val(trip["destination"]); 
         $('#price2').val(trip["price"]);    
-        $('#seatsavailable2').val(trip["seatsavailable"]);    
-        if(trip["regular"] == "Y"){
+        $('#seatsavailable2').val(trip["seatsavailable"]); 
+        //$('#car2').val(trip["car"]);
+        /*if(trip["regular"] == "Y"){
             $('#yes2').prop('checked', true);
             $('#monday2').prop('checked', trip["monday"] == "1"? true:false);
             $('#tuesday2').prop('checked', trip["tuesday"] == "1"? true:false);
@@ -230,12 +235,12 @@ $(function(){
             $('#sunday2').prop('checked', trip["sunday"] == "1"? true:false);
             $('input[name="time2"]').val(trip["time"]);
             $('.oneoff2').hide(); $('.regular2').show();
-        }else{
-            $('#no2').prop('checked', true);
+        }else{*/
+            //$('#no2').prop('checked', true);
             $('input[name="date2"]').val(trip["date"]);
             $('input[name="time2"]').val(trip["time"]);
-            $('.regular2').hide(); $('.oneoff2').show();
-        };
+            //$('.regular2').hide(); $('.oneoff2').show();
+        //};
     }
     
     function getEditTripDepartureCoordinates(){

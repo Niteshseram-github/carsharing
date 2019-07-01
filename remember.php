@@ -5,12 +5,13 @@ if(!isset($_SESSION['user_id']) && !empty($_COOKIE['rememberme'])){
            //array_key_exists('user_id', $_SESSION)
     //f1: COOKIE: $a . "," . bin2hex($b)
     //f2: hash('sha256', $a)
-    
+    echo $_COOKIE['rememberme'];
     //extract $authentificators 1&2 from the cookie
     list($authentificator1, $authentificator2) = explode(',', $_COOKIE['rememberme']);
     $authentificator2 = hex2bin($authentificator2);
     $f2authentificator2 = hash('sha256', $authentificator2);
-    
+    echo "    ";
+   // echo "$authentificator1";
     //Look for authentificator1 in the rememberme table
     $sql = "SELECT * FROM rememberme where authentificator1 = '$authentificator1'";
     $result = mysqli_query($link, $sql);
@@ -19,7 +20,7 @@ if(!isset($_SESSION['user_id']) && !empty($_COOKIE['rememberme'])){
         exit;
     }
     $count = mysqli_num_rows($result);
-    if($count !== 1){
+    if($count != 1){
         echo '<div class="alert alert-danger">Remember me process failed!</div>';
         exit;
     }
@@ -62,7 +63,7 @@ if(!isset($_SESSION['user_id']) && !empty($_COOKIE['rememberme'])){
         if(!$result){
             echo  '<div class="alert alert-danger">There was an error storing data to remember you next time.</div>';  
         }
-        
+        echo "abc";
         //Log the user in and redirect to notes page
         $_SESSION['user_id'] = $row['user_id'];
         header("location:mainpageloggedin.php");

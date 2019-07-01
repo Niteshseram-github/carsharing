@@ -22,7 +22,7 @@ include('remember.php');
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
       <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/sunny/jquery-ui.css">
       <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-      <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBYdjP_uiHxssoB-awKBFkK9kc3P32IEAg&callback=initMap"
+      <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDnYbzIanFn0RpBSi1DM_kAmcpm3OcS5fM&callback=initMap"
     async defer></script>
       <style>
           /*margin top for myContainer*/
@@ -82,7 +82,7 @@ include('remember.php');
             text-align:left; 
           }
           .journey2{
-            text-align:right; 
+            text-align:left; 
           }
           .time{
             margin-top:10px;  
@@ -127,7 +127,9 @@ include('remember.php');
           .pac-container {
             z-index: 100000;
           }
-          
+          #cancelbutton, #requestbutton, #bookedbutton{
+              text-align: right;
+          }
       </style>
   </head>
   <body>
@@ -276,14 +278,14 @@ include('remember.php');
                   </div>
                   <div class="form-group">
                       <label for="phonenumber" class="sr-only">Telephone:</label>
-                      <input class="form-control" type="text" name="phonenumber" id="phonenumber" placeholder="Telephone Number" maxlength="15">
+                      <input class="form-control" type="text" name="phonenumber" id="phonenumber" placeholder="Telephone Number" maxlength="10">
                   </div>
                   <div class="form-group">
                       <label><input type="radio" name="gender" id="male" value="male">Male</label>
                       <label><input type="radio" name="gender" id="female" value="female">Female</label>
                   </div>
                   <div class="form-group">
-                      <label for="moreinformation">Comments: </label>
+                      <label for="moreinformation">About Yourself: </label>
                       <textarea name="moreinformation" class="form-control" rows="5" maxlength="300"></textarea>
                   </div>
               </div>

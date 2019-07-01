@@ -4,7 +4,7 @@ session_start();
 include('connection.php');
 $trip_id = $_POST['trip_id'];
 $pickup = $_POST['pickup'];
-$tbl_name='booking';
+$tbl_name='books';
 $user_id=$_SESSION['user_id'];
 
 $sql = "SELECT * FROM $tbl_name WHERE user_id='$user_id'";

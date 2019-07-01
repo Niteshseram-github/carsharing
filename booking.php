@@ -137,7 +137,10 @@ if($count == 1){
           }
         .departure, .destination{
             font-size:1.5em;
-        } 
+        }
+        .plate{
+              font-size: 1.2em;
+          } 
         .status{
             font-size:1.3em;
         } 

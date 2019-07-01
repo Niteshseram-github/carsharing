@@ -2,11 +2,11 @@
 //start session and connect
 session_start();
 include('connection.php');
-$book_id = $_POST['book_id'];
+$user_id = $_POST['user_id'];
 $trip_id = $_POST['trip_id'];
-$tbl_name='booking';
+$tbl_name='books';
 
-$sql = "SELECT * FROM $tbl_name WHERE book_id='$book_id'";
+$sql = "SELECT * FROM $tbl_name WHERE user_id='$user_id' AND trip_id='$trip_id'";
 $result = mysqli_query($link, $sql);
 if($result){
     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
@@ -18,7 +18,7 @@ $sql2="SELECT * FROM carsharetrips WHERE trip_id='$trip_id'";
 $result2 = mysqli_query($link, $sql2);
 $row2 = mysqli_fetch_array($result2);
 $seat=$row2['seatsavailable']-1;
-$sql = "UPDATE $tbl_name SET status='Accepted' WHERE book_id='$book_id'";
+$sql = "UPDATE $tbl_name SET status='Accepted' WHERE user_id='$user_id' AND trip_id='$trip_id'";
 $result = mysqli_query($link, $sql);
 
 $sql1 = "UPDATE carsharetrips SET seatsavailable='$seat' WHERE trip_id='$trip_id'";

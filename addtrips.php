@@ -17,6 +17,7 @@ $missingdays = '<p><strong>Please select at least one weekday!</strong></p>';
 $missingdate = '<p><strong>Please choose a date for your trip!</strong></p>';
 $missingtime = '<p><strong>Please choose a time for your trip!</strong></p>';
 $missingcardetails= '<p><strong>Please fill the car details before adding trip!</strong></p>';
+$missingcar= '<p><strong>Please choose a car!</strong></p>';
 
 //get user_id
 $id = $_SESSION['user_id'];
@@ -45,16 +46,18 @@ $departure = $_POST["departure"];
 $destination = $_POST["destination"];
 $price = $_POST["price"];
 $seatsavailable = $_POST["seatsavailable"];
-$regular = $_POST["regular"];
+$car=$_POST["car"];
+//$regular = $_POST["regular"];
 $date = $_POST["date"];
 $time = $_POST["time"];
-$monday = $_POST["monday"];
+/*$monday = $_POST["monday"];
 $tuesday = $_POST["tuesday"];
 $wednesday = $_POST["wednesday"];
 $thursday = $_POST["thursday"];
 $friday = $_POST["friday"];
 $saturday = $_POST["saturday"];
-$sunday = $_POST["sunday"];
+$sunday = $_POST["sunday"];*/
+
 
 //check coordinates
 if(!isset($_POST["departureLatitude"]) or !isset($_POST["departureLongitude"])){
@@ -106,24 +109,30 @@ if(!$seatsavailable){
     $seatsavailable = filter_var($seatsavailable, FILTER_SANITIZE_STRING);    
 }
 
+//Check car
+if($car=="Select Car"){
+    $errors .= $missingcar;
+}
+
+
 //Check regular
-if(!$regular){
+/*if(!$regular){
     $errors .= $missingfrequency;    
 }elseif($regular == "Y"){
     if(!$monday && !$tuesday && !$wednesday && !$thursday && !$friday && !$saturday && !$sunday ){
         $errors .= $missingdays; 
-    }
+    }*
     if(!$time){
         $errors .= $missingtime;   
     }
-}elseif($regular == "N"){
+}elseif($regular == "N"){*/
     if(!$date){
         $errors.= $missingdate;   
     }
     if(!$time){
         $errors .= $missingtime;   
     }
-}
+//}*/
 
 //if there is an error print error message
 if($errors){
@@ -134,14 +143,14 @@ if($errors){
     $tbl_name = 'carsharetrips';
     $departure = mysqli_real_escape_string($link, $departure);
     $destination = mysqli_real_escape_string($link, $destination);
-    if($regular == "Y"){
+    /*if($regular == "Y"){
         //query for a regular trip
-        $sql = "INSERT INTO $tbl_name (`user_id`,`departure`, `departureLongitude`, `departureLatitude`, `destination`, `destinationLongitude`, `destinationLatitude`, `price`, `seatsavailable`, `regular`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `time`) VALUES ('".$_SESSION['user_id']."', '$departure','$departureLongitude','$departureLatitude','$destination','$destinationLongitude','$destinationLatitude','$price','$seatsavailable','$regular','$monday','$tuesday','$wednesday','$thursday','$friday','$saturday','$sunday','$time')";
-    }else{ 
+        $sql = "INSERT INTO $tbl_name (`user_id`,`car_id`,`departure`, `departureLongitude`, `departureLatitude`, `destination`, `destinationLongitude`, `destinationLatitude`, `price`, `seatsavailable`, `regular`, `monday`, `tuesday`, `wednesday`, `thursday`, `friday`, `saturday`, `sunday`, `time`) VALUES ('".$_SESSION['user_id']."','$car', '$departure','$departureLongitude','$departureLatitude','$destination','$destinationLongitude','$destinationLatitude','$price','$seatsavailable','$regular','$monday','$tuesday','$wednesday','$thursday','$friday','$saturday','$sunday','$time')";
+    }else{ */
         //query for a one off trip
-        $sql = "INSERT INTO $tbl_name (`user_id`,`departure`, `departureLongitude`, `departureLatitude`, `destination`, `destinationLongitude`, `destinationLatitude`, `price`, `seatsavailable`, `regular`, `date`, `time`) VALUES ('".$_SESSION['user_id']."', '$departure','$departureLongitude','$departureLatitude','$destination','$destinationLongitude','$destinationLatitude','$price','$seatsavailable','$regular','$date','$time')";   
+        $sql = "INSERT INTO $tbl_name (`user_id`,`car_id`,`departure`, `departureLongitude`, `departureLatitude`, `destination`, `destinationLongitude`, `destinationLatitude`, `price`, `seatsavailable`, `date`, `time`) VALUES ('".$_SESSION['user_id']."','$car', '$departure','$departureLongitude','$departureLatitude','$destination','$destinationLongitude','$destinationLatitude','$price','$seatsavailable','$date','$time')";   
         $results = mysqli_query($link, $sql);
-    }
+    //}
     
     //check if query is successful
     if(!$results){

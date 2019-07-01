@@ -18,6 +18,8 @@ if($count == 1){
     $username = $row['username'];
     $email = $row['email']; 
     $picture = $row['profilepicture'];
+    $phoneno= $row['phonenumber'];
+    $aboutme=$row['moreinformation'];
 }else{
     echo "There was an error retrieving the username and email from the database";   
 }
@@ -99,6 +101,22 @@ $count = mysqli_num_rows($result);
               margin: auto;
               z-index: 1100;
           }
+          .trip{
+            border:1px solid grey;
+            border-radius: 10px;
+            margin-bottom:10px;
+            background: linear-gradient(#ECE9E6, #FFFFFF);
+            padding: 10px;
+        }
+        .departure, .destination{
+            font-size:1.2em;
+        }
+        #mycar{
+            margin-bottom: 100px;   
+          }
+          .cars{
+            margin-top: 20px;
+        }
       </style>
   </head>
   <body>
@@ -121,9 +139,9 @@ $count = mysqli_num_rows($result);
               <div class="navbar-collapse collapse" id="navbarCollapse">
                   <ul class="nav navbar-nav">
                     <li><a href="index.php">Search</a></li>  
-                    <li class="active"><a href="#">Profile</a></li>
-                    <li><a href="#">Request</a></li>
+                    <li class="active"><a href="#">Profile</a></li> 
                     <li><a href="booking.php">Booking</a></li>
+                    <li><a href="request.php">Request</a></li>
                       <li><a href="mainpageloggedin.php">My Trips</a></li>
                   </ul>
                   <ul class="nav navbar-nav navbar-right">
@@ -162,6 +180,14 @@ $count = mysqli_num_rows($result);
                           <tr data-target="#updateemail" data-toggle="modal">
                               <td>Email</td>
                               <td><?php echo $email ?></td>
+                          </tr>
+                          <tr data-target="#updatephonenumber" data-toggle="modal">
+                              <td>Mobile Number</td>
+                              <td><?php echo $phoneno ?></td>
+                          </tr>
+                          <tr data-target="#updateaboutme" data-toggle="modal">
+                              <td>About Me</td>
+                              <td><?php echo $aboutme ?></td>
                           </tr>
                           <tr data-target="#updatepassword" data-toggle="modal">
                               <td>Password</td>
@@ -246,7 +272,76 @@ $count = mysqli_num_rows($result);
       </div>
       </div>
       </form>
-      
+      <!--Update phonenumber-->    
+      <form method="post" id="updatephonenumberform">
+        <div class="modal" id="updatephonenumber" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button class="close" data-dismiss="modal">
+                    &times;
+                  </button>
+                  <h4 id="myModalLabel">
+                    Enter new Mobile Number: 
+                  </h4>
+              </div>
+              <div class="modal-body">
+                  
+                  <!--Update email message from PHP file-->
+                  <div id="updatephonenumbermessage"></div>
+                  
+
+                  <div class="form-group">
+                      <label for="phonenumber" >Mobile Number:</label>
+                      <input class="form-control" type="text" name="phonenumber" id="phonenumber" maxlength="10" value="<?php echo $phoneno ?>">
+                  </div>
+                  
+              </div>
+              <div class="modal-footer">
+                  <input class="btn green" name="updatephonenumber" type="submit" value="Submit">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  Cancel
+                </button> 
+              </div>
+          </div>
+      </div>
+      </div>
+    </form>
+    <!--Update aboutme-->    
+      <form method="post" id="updateaboutmeform">
+        <div class="modal" id="updateaboutme" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button class="close" data-dismiss="modal">
+                    &times;
+                  </button>
+                  <h4 id="myModalLabel">
+                    Enter new About Me: 
+                  </h4>
+              </div>
+              <div class="modal-body">
+                  
+                  <!--Update aboutme message from PHP file-->
+                  <div id="updateaboutmemessage"></div>
+                  
+
+                  <div class="form-group">
+                      <label for="aboutme" >About Me:</label>
+                      <input class="form-control" type="text" name="aboutme" id="aboutme" maxlength="300" value="<?php echo $aboutme ?>">
+                  </div>
+                  
+              </div>
+              <div class="modal-footer">
+                  <input class="btn green" name="updateusername" type="submit" value="Submit">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  Cancel
+                </button> 
+              </div>
+          </div>
+      </div>
+      </div>
+      </form>
     <!--Update password-->    
       <form method="post" id="updatepasswordform">
         <div class="modal" id="updatepassword" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -336,46 +431,26 @@ $count = mysqli_num_rows($result);
       </div>
       </div>
       </form>
-<!--Car Container-->
-      <div class="container" id="container">
+      <!--Car Container-->
+      <div class="container" id="carcontainer">
           <div class="row">
-              <div class="col-md-offset-3 col-md-6 col-ms-6">
-
-                  <h2>Car Details:</h2>
-                  <div class="table-responsive">
-                      <table class="table table-hover table-condensed table-bordered">
-                          <col width="200">
-                            <col width="300">
-                          <tr data-target="#updatecarbrand" data-toggle="modal">
-                              <td>Car Brand</td>
-                              <td><?php echo $carbrand ?></td>
-                          </tr>
-                          <tr data-target="#updatecarmodel" data-toggle="modal">
-                              <td>Car Model</td>
-                              <td><?php echo $carmodel ?></td>
-                          </tr>
-                          <tr data-target="#updateregistrationno" data-toggle="modal">
-                              <td>Registration Number</td>
-                              <td><?php echo $regno ?></td>
-                          </tr>
-                          <tr data-target="#updateplateno" data-toggle="modal">
-                              <td>Plate number</td>
-                              <td><?php echo $plateno ?></td>
-                          </tr>
-                      </table>
-                  
+              <div class="col-sm-8 col-sm-offset-3">
+                  <div>
+                      <button type="button" class="btn green btn-lg" data-target="#addcarModal" data-toggle="modal">
+                          Add Car
+                      </button>
                   </div>
-              
+                  <div id="mycar" class="cars">
+                      <!--Ajax Call to php file-->
+                  </div>
               </div>
+
           </div>
       </div>
       
-      
-      
-      
-      <!--Update car brand-->    
-      <form method="post" id="updatecarbrandform">
-        <div class="modal" id="updatecarbrand" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <!--Container-->
+      <form method="post" id="addcarform" action="addcar.php">
+        <div class="modal" id="addcarModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -383,139 +458,113 @@ $count = mysqli_num_rows($result);
                     &times;
                   </button>
                   <h4 id="myModalLabel">
-                    Edit Car Brand: 
+                    New Car Details:
                   </h4>
               </div>
               <div class="modal-body">
                   
-                  <!--update carbrand message from PHP file-->
-                  <div id="updatecarbrandmessage"></div>
+                  <!--Error message from PHP file-->
+                  <div id="result"></div>
                   
-
-                  <div class="form-group">
-                      <label for="carbrand" >Car Brand:</label>
-                      <input class="form-control" type="text" name="carbrand" id="carbrand" maxlength="30" value="<?php echo $carbrand ?>">
-                  </div>
-                  
+                <div class="form-group">
+                    <label for="brand" class="sr-only">Car Brand:</label>
+                    <input type="text" name="brand" id="brand" style="text-transform: capitalize;" placeholder="CAR BRAND" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="model" class="sr-only">Car Model:</label>
+                    <input type="text" name="model" style="text-transform: capitalize;" id="model" placeholder="CAR MODEL" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="regno" class="sr-only">Registration Number:</label>
+                    <input type="text" name="regno" id="regno" placeholder="Registration Number"  maxlength="17" style="text-transform: uppercase;"  class="form-control">
+                </div> 
+                <div class="form-group">
+                    <label for="plateno" class="sr-only">Plate Number:</label>
+                    <input type="plateno" name="plateno" id="plateno" placeholder="Plate Number" maxlength="6" style="text-transform: uppercase;"  class="form-control">
+                </div>
               </div>
               <div class="modal-footer">
-                  <input class="btn green" name="updatecarbrand" type="submit" value="Submit">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  Cancel
-                </button> 
-              </div>
+                <input class="btn btn-primary" name="addCar" type="submit" value="Add">
+                <button type="submit" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
           </div>
       </div>
       </div>
       </form>
-      <!-- Update Car Model-->
-      <form method="post" id="updatecarmodelform">
-        <div class="modal" id="updatecarmodel" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+      <!--Edit a trip form-->
+      <!--<form method="post" id="editcarform">
+        <div class="modal" id="editcarModal" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
                   <button class="close" data-dismiss="modal">
                     &times;
                   </button>
-                  <h4 id="myModalLabel">
-                    Edit Car Model: 
+                  <h4 id="myModalLabel2">
+                    Edit Car Details:
                   </h4>
               </div>
               <div class="modal-body">
                   
-                  <!--update car model message from PHP file-->
-                  <div id="updatecarmodelmessage"></div>
+                  <!--Error message from PHP file-->
+                  <!--<div id="result2"></div>
                   
-
                   <div class="form-group">
-                      <label for="car" >Car Model:</label>
-                      <input class="form-control" type="text" name="carmodel" id="carmodel" maxlength="30" value="<?php echo $carmodel ?>">
-                  </div>
-                  
+                    <label for="brand2" class="sr-only">Car Brand:</label>
+                    <input type="text" name="brand2" id="brand2" placeholder="Car Brand" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="model2" class="sr-only">Car Model:</label>
+                    <input type="text" name="model2" id="model2" placeholder="Car Model" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="regno2" class="sr-only">Registration Number:</label>
+                    <input type="text" name="regno2" id="regno2" placeholder="Registration Number"  maxlength="17" class="form-control">
+                </div> 
+                <div class="form-group">
+                    <label for="plateno2" class="sr-only">Plate Number:</label>
+                    <input type="plateno2" name="plateno2" id="plateno2" placeholder="Plate Number" maxlength="6" class="form-control">
+                </div>
+                
               </div>
               <div class="modal-footer">
-                  <input class="btn green" name="updatecarmodel" type="submit" value="Submit">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  Cancel
-                </button> 
-              </div>
+                <input class="btn btn-primary" name="updatecar" type="submit" id="updatecar" value="Update">
+                <input type="button" class="btn btn-danger" name="deletecar" value="Delete" id="deletecar">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
           </div>
       </div>
       </div>
-      </form>
+      </form>-->
       
-      <!--Update Registration No-->
-      <form method="post" id="updateregistrationnoform">
-        <div class="modal" id="updateregistrationno" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <!--Delete a car form-->
+      <form method="post" id="deletecarform">
+        <div class="modal" id="deletecarModal" role="dialog" aria-labelledby="myModalLabel2" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
                   <button class="close" data-dismiss="modal">
                     &times;
                   </button>
-                  <h4 id="myModalLabel">
-                    Edit Registration Number: 
+                  <h4 id="myModalLabel2">
+                    Are you sure?
                   </h4>
               </div>
               <div class="modal-body">
-                  
-                  <!--update username message from PHP file-->
-                  <div id="updateregistrationnomessage"></div>
-                  
-
-                  <div class="form-group">
-                      <label for="registrationno" >Registration Number:</label>
-                      <input class="form-control" type="text" name="regno" id="regno" maxlength="17" value="<?php echo $regno ?>">
-                  </div>
-                  
+                  <div id="deletecarmessage"></div>
               </div>
               <div class="modal-footer">
-                  <input class="btn green" name="updateregistrationno" type="submit" value="Submit">
+                <input class="btn green" name="yes" type="submit" value="Yes">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                  Cancel
-                </button> 
-              </div>
+                  No
+                </button>
+            </div>
           </div>
       </div>
       </div>
       </form>
       
-      <!--Update Plate no-->
-      
-      <form method="post" id="updateplatenoform">
-        <div class="modal" id="updateplateno" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button class="close" data-dismiss="modal">
-                    &times;
-                  </button>
-                  <h4 id="myModalLabel">
-                    Edit Plate Number: 
-                  </h4>
-              </div>
-              <div class="modal-body">
-                  
-                  <!--update username message from PHP file-->
-                  <div id="updateplatenomessage"></div>
-                  
-
-                  <div class="form-group">
-                      <label for="plateno" >Plate Number:</label>
-                      <input class="form-control" type="text" name="plateno" id="plateno" maxlength="17" value="<?php echo $plateno ?>">
-                  </div>
-                  
-              </div>
-              <div class="modal-footer">
-                  <input class="btn green" name="updateplateno" type="submit" value="Submit">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                  Cancel
-                </button> 
-              </div>
-          </div>
-      </div>
-      </div>
-      </form>
       
     <!-- Footer-->
       <div class="footer">

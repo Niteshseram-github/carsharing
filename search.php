@@ -114,8 +114,16 @@ $queryChoice2 = [
     " AND ((destinationLongitude > $minLongitudeDestination) OR (destinationLongitude < $maxLongitudeDestination))",
     " AND (destinationLatitude BETWEEN $minLatitudeDestination AND $maxLatitudeDestination)"
 ];
+$queryChoice3 = [
+    " (destinationLongitude BETWEEN $minLongitudeDestination AND $maxLongitudeDestination)",
+    " AND (destinationLatitude BETWEEN $minLatitudeDestination AND $maxLatitudeDestination)"
+];
+$queryChoice4 = [
+    " ((destinationLongitude > $minLongitudeDestination) OR (destinationLongitude < $maxLongitudeDestination))",
+    " AND (destinationLatitude BETWEEN $minLatitudeDestination AND $maxLatitudeDestination)"
+];
 
-$queryChoices = [$queryChoice2, $queryChoice1];
+$queryChoices = [$queryChoice4,$queryChoice3,$queryChoice2, $queryChoice1];
 
 $sql = "SELECT * FROM carsharetrips WHERE ";
 
@@ -133,7 +141,7 @@ if(mysqli_num_rows($result) == 0){
     echo "<div class='alert alert-info noresults'>There are no journeys matching your search!</div>"; exit;
 }
 
-echo "<div class='alert alert-info journeysummary'>From $departure to $destination.<br />Closest Journeys:</div>";            
+echo "<div class='alert alert-info journeysummary'>Trips to $destination.<br /></div>";            
 echo '<div id="message">'; 
 
 //cycle through trips and find close ones
@@ -144,20 +152,20 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
     //check if the trip date is in the pas
     $k=0;
     $dateOK = 1;
-    if($row['regular']=="N"){
+    //if($row['regular']=="N"){
         $source = $row['date'];
         $tripDate = DateTime::createFromFormat('D d M, Y', $source);
         $today = date("D d M, Y");
         $todayDate = DateTime::createFromFormat('D d M, Y', $today);
         $dateOK = ($tripDate > $todayDate);
-    }
+    //}
     if($_SESSION['user_id']){
         $trip_id = $row['trip_id'];
     }
     
     $user_id= $_SESSION['user_id'];
         
-    $sql3="SELECT * FROM booking WHERE trip_id='$trip_id' AND user_id='$user_id'";
+    $sql3="SELECT * FROM books WHERE trip_id='$trip_id' AND user_id='$user_id'";
     $result3 = mysqli_query($link,$sql3);
     $row3=mysqli_fetch_array($result3);
     if(mysqli_num_rows($result3)>0){
@@ -205,6 +213,11 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
             
             //get trip destination
             $tripDestination = $row['destination'];
+            //Distance
+        
+           //echo "<pre>"; print_r($data); echo "</pre>";
+            
+            
             
             //get trip price
             $tripPrice = $row['price'];
@@ -213,10 +226,10 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
             $seatsAvailable = $row['seatsavailable'];
             
             //Get trip frequency and time:
-            if($row['regular']=="N"){
+            //if($row['regular']=="N"){
                 $frequency = "One-off journey.";
                 $time = $row['date']." at " .$row['time'].".";
-            }else{
+            /*}else{
                 $frequency = "Regular.";
                 $weekdays=['monday'=>'Mon','tuesday'=>'Tue','wednesday'=>'Wed','thursday'=>'Thu','friday'=>'Fri','saturday'=>'Sat','sunday'=>'Sun'];
                 $array = [];
@@ -226,7 +239,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                     }
                     $time = implode("-", $array)." at " .$row['time'].".";
                 }
-            }
+            }*/
             
             //print trip
             echo 
@@ -239,7 +252,7 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                     </div>
                 </div>
 
-                <div class='col-sm-8 journey'>
+                <div class='col-sm-6 journey'>
                     <div>
                         <span class='departure'>Departure:
                         </span> 
@@ -268,9 +281,11 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                     </div>
                     <div class='seatsavailable'>
                         $seatsAvailable left
-                    </div>";
+                    </div>
+                </div>";
+            echo "<div class='col-sm-2'>";
                     if($i==1){
-                    $sql4="SELECT * FROM booking WHERE trip_id='$trip_id' AND user_id='$user_id'";
+                    $sql4="SELECT * FROM books WHERE trip_id='$trip_id' AND user_id='$user_id'";
                     $result4 = mysqli_query($link,$sql4);
                     if(mysqli_num_rows($result4) > 0){
                         $k=1;
@@ -284,22 +299,29 @@ while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                     if($k==1){
                         echo"<div>
                         <button id='cancelbutton' class= 'btn green' data-target='
-                        #cancelbookingModal' data-toggle='modal' data-book_id='".$row3['book_id']."'><h6>Cancel</h6></button>
+                        #cancelbookingModal' data-toggle='modal' data-trip_id='".$row3['trip_id']."'><h6>Cancel</h6></button>
                     </div>";
                         $k=0;
                     }
                     else if($k==2){
                         echo"<div>
-                        <button id='button' class= 'btn green'><h6>Booked</h6></button>
+                        <button id='bookedbutton' class= 'btn green'><h6>Booked</h6></button>
                     </div>";
                         $k=0;
                     } 
                     else if($i==1){
+                        if($row['seatsavailable']==0){
+                            echo"
+                            <div>
+                                <button  class= 'btn green'><h6>No Seat Available</h6></button>
+                            </div>";
+                        }else{
                     echo"
                     <div>
                         <button id='requestbutton' class= 'btn green' data-target='
                         #requestbookingModal' data-toggle='modal' data-trip_id='".$row['trip_id']."'><h6>Request Booking</h6></button>
                     </div>";
+                    }
                     }
             echo"
                 </div>
